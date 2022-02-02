@@ -1,9 +1,9 @@
 package com.api.userparcelservice.security.jwt;
 
 
-
 import com.api.userparcelservice.dto.OnUserLogoutSuccessEvent;
 import com.api.userparcelservice.entity.RoleEntity;
+import com.api.userparcelservice.entity.UserEntity;
 import com.api.userparcelservice.exception.JwtAuthenticationException;
 import com.api.userparcelservice.security.JwtUserDetailsService;
 import io.jsonwebtoken.*;
@@ -51,10 +51,14 @@ public class JwtTokenProvider {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
 
-    public String createToken(String username, List<RoleEntity> roleEntities) {
+    public String createToken(UserEntity userEntity, List<RoleEntity> roleEntities) {
 
-        Claims claims = Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(userEntity.getUsername());
         claims.put("roles", getRoleNames(roleEntities));
+        claims.put("id", userEntity.getId());
+        claims.put("password", userEntity.getPassword());
+//        claims.put("authorities", userEntity.getRoles());
+        claims.put("status", userEntity.getStatus());
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validInMilliSeconds);
@@ -77,10 +81,22 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(
                 getUsername(token));
+        System.out.println("password: " + getPassword(token));
         return new UsernamePasswordAuthenticationToken(userDetails,
                 "",
                 userDetails.getAuthorities());
     }
+
+
+    public String getPassword(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("password", String.class);
+    }
+
 
     public String getUsername(String token) {
         return Jwts.parserBuilder()

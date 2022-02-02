@@ -1,6 +1,7 @@
 package com.api.userparcelservice.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,7 +23,12 @@ public class RoleEntity extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<UserEntity> users;
+
+
+
 
 }

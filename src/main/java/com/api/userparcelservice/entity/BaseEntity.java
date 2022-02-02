@@ -2,6 +2,7 @@ package com.api.userparcelservice.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,6 +24,7 @@ public class BaseEntity implements Serializable {
 
     @UpdateTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Column(name = "updated")
     private LocalDateTime updated;
 

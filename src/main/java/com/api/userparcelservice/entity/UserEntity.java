@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "user_table")
-@ToString
 public class UserEntity extends BaseEntity {
 
 
@@ -33,6 +32,7 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",

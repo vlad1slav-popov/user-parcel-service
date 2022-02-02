@@ -41,27 +41,30 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<UserEntity> getLoginResponse(UserLoginRequest requestDto) {
+        System.out.println("ok");
         try {
             String username = requestDto.getUsername();
             UserEntity user = userService.getUserDataByUsernameAndPassword(requestDto);
+            System.out.println(user);
 
             if (!user.getStatus().equals(Status.ACTIVE)) {
                 throw new UserException("USER STATUS IS: " + user.getStatus());
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,
-                    requestDto.getPassword()));
+                   requestDto.getPassword()));
+            System.out.println("authenticated");
 
-            String token = jwtTokenProvider.createToken(username, user.getRoles());
+            String token = jwtTokenProvider.createToken(user, user.getRoles());
+//            System.out.println(token);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("Authorization", "Bearer_" + token);
-
-
 
             return ResponseEntity.ok()
                     .headers(httpHeaders)
                     .body(user);
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             throw new BadCredentialsException("Invalid username or password");
         }
     }

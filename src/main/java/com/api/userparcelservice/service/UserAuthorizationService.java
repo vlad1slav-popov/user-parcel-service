@@ -54,8 +54,13 @@ public class UserAuthorizationService {
 
         String encodedPass = bCryptPasswordEncoder.encode(request.getPassword());
         RoleEntity user = roleRepository.findRoleByName("ROLE_USER");
+//        System.out.println(user);
+        System.out.println(user);
         List<RoleEntity> roleEntityList = new ArrayList<>();
         roleEntityList.add(user);
+        System.out.println(roleEntityList);
+
+
 
         UserEntity userEntity = UserEntity.builder()
                 .username(request.getUsername())
@@ -66,6 +71,7 @@ public class UserAuthorizationService {
 
 
         userLoginRepository.save(userEntity);
+
 
 
         return ResponseEntity.ok(userEntity);
