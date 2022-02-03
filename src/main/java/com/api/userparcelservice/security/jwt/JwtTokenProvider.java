@@ -3,6 +3,7 @@ package com.api.userparcelservice.security.jwt;
 
 import com.api.userparcelservice.dto.OnUserLogoutSuccessEvent;
 import com.api.userparcelservice.entity.RoleEntity;
+import com.api.userparcelservice.entity.Status;
 import com.api.userparcelservice.entity.UserEntity;
 import com.api.userparcelservice.exception.JwtAuthenticationException;
 import com.api.userparcelservice.security.JwtUserDetailsService;
@@ -106,6 +107,41 @@ public class JwtTokenProvider {
                 .getBody()
                 .getSubject();
     }
+
+    //-------------------------------------------------------------------------------------
+
+    public Long getId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id", Long.class);
+    }
+
+    public String getStatus(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("status", String.class);
+    }
+
+
+    public UserEntity buildEntityForJwt(String token) {
+        return UserEntity.builder()
+                .id(getId(token))
+                .username(getUsername(token))
+                .password(getPassword(token))
+                .status(Status.valueOf(getStatus(token)))
+                .build();
+    }
+
+
+    //--------------------------------------------------------------------------------------
+
+
 
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
