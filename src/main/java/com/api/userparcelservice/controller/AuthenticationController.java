@@ -22,7 +22,7 @@ public class AuthenticationController {
     private final JmsTemplate jmsTemplate;
 
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public ResponseEntity<UserEntity> login(@RequestBody UserLoginRequest userLoginRequest) {
         jmsTemplate.convertAndSend("requestqueue", userLoginRequest);
 
@@ -40,7 +40,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public ResponseEntity<UserEntity> register(@RequestBody RegisterUserRequest registerUserRequest) {
         jmsTemplate.convertAndSend("requestqueue", registerUserRequest);
         return ResponseEntity.ok((UserEntity) jmsTemplate

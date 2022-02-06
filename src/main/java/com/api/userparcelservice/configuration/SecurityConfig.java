@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
 
-    private static final String LOGIN_ENDPOINT = "/auth/**";
+    private static final String LOGIN_ENDPOINT = "/auth/user/**";
 
 
 
