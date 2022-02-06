@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="LENOVO (generated)" id="1644170139649-1">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="created" type="datetime(6)"/>
+            <column defaultValueComputed="NULL" name="updated" type="datetime(6)"/>
+            <column defaultValue="NULL" name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="LENOVO (generated)" id="1644170139649-2">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="LENOVO (generated)" id="1644170139649-3">
+        <createTable tableName="user_table">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="created" type="datetime(6)"/>
+            <column defaultValueComputed="NULL" name="updated" type="datetime(6)"/>
+            <column defaultValue="NULL" name="password" type="VARCHAR(255)"/>
+            <column defaultValue="NULL" name="status" type="VARCHAR(255)"/>
+            <column defaultValue="NULL" name="username" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="LENOVO (generated)" id="1644170139649-4">
+        <createIndex indexName="FKh8ciramu9cc9q3qcqiv4ue8a6" tableName="user_roles">
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="LENOVO (generated)" id="1644170139649-5">
+        <createIndex indexName="FKoxgn0x8mxxu1hovew528qckp9" tableName="user_roles">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="LENOVO (generated)" id="1644170139649-6">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_roles" constraintName="FKh8ciramu9cc9q3qcqiv4ue8a6" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+    <changeSet author="LENOVO (generated)" id="1644170139649-7">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles" constraintName="FKoxgn0x8mxxu1hovew528qckp9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="user_table"/>
+    </changeSet>
+</databaseChangeLog>

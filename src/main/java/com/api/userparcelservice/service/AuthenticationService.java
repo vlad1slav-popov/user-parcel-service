@@ -1,21 +1,17 @@
 package com.api.userparcelservice.service;
 
 
-
-
 import com.api.userparcelservice.domain.UserLoginRequest;
+import com.api.userparcelservice.dto.MqDTO;
 import com.api.userparcelservice.entity.Status;
 import com.api.userparcelservice.entity.UserEntity;
 import com.api.userparcelservice.exception.UserException;
 import com.api.userparcelservice.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,20 +23,17 @@ public class AuthenticationService {
 
     private final UserService userService;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public AuthenticationService(AuthenticationManager authenticationManager,
                                  JwtTokenProvider jwtTokenProvider,
-                                 UserService userService,
-                                 BCryptPasswordEncoder bCryptPasswordEncoder) {
+                                 UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public ResponseEntity<UserEntity> getLoginResponse(UserLoginRequest requestDto) {
+    public MqDTO getLoginResponse(UserLoginRequest requestDto) {
         System.out.println("ok");
         try {
             String username = requestDto.getUsername();
@@ -52,17 +45,20 @@ public class AuthenticationService {
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,
-                   requestDto.getPassword()));
+                    requestDto.getPassword()));
             System.out.println("authenticated");
+
 
             String token = jwtTokenProvider.createToken(user, user.getRoles());
 //            System.out.println(token);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("Authorization", "Bearer_" + token);
+//            HttpHeaders httpHeaders = new HttpHeaders();
+//            httpHeaders.set("Authorization", "Bearer_" + token);
 
-            return ResponseEntity.ok()
-                    .headers(httpHeaders)
-                    .body(user);
+
+            return MqDTO.builder()
+                    .token(token)
+                    .userEntity(user)
+                    .build();
         } catch (AuthenticationException e) {
             e.printStackTrace();
             throw new BadCredentialsException("Invalid username or password");
