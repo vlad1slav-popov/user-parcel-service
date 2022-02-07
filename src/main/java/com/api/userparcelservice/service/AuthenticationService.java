@@ -41,7 +41,7 @@ public class AuthenticationService {
             System.out.println(user);
 
             if (!user.getStatus().equals(Status.ACTIVE)) {
-                throw new UserException("USER STATUS IS: " + user.getStatus());
+                throw new UserException("USER STATUS IS: " + user.getStatus(), "001");
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,

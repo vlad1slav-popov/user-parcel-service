@@ -3,7 +3,7 @@ package com.api.userparcelservice.security;
 
 
 import com.api.userparcelservice.entity.UserEntity;
-import com.api.userparcelservice.exception.UserNotFoundException;
+import com.api.userparcelservice.exception.UserException;
 import com.api.userparcelservice.security.jwt.JwtUser;
 import com.api.userparcelservice.security.jwt.JwtUserFactory;
 import com.api.userparcelservice.service.UserService;
@@ -27,7 +27,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = Optional.ofNullable(userService.getUserDataByUsername(username))
-                .orElseThrow(() -> new UserNotFoundException("USER_NOT_FOUND"));
+                .orElseThrow(() -> new UserException("Courier with username: " +
+                        username + " not found", "005"));
 
         JwtUser jwtUser = JwtUserFactory.create(userEntity);
 

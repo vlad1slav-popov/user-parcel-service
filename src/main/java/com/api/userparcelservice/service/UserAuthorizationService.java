@@ -40,16 +40,16 @@ public class UserAuthorizationService {
 
         if (Objects.isNull(request.getPassword()) ||
                 Objects.isNull(request.getUsername())) {
-            throw new UserException("Username or password are empty");
+            throw new UserException("Username or password are empty", "002");
         }
 
         if (request.getPassword().trim().isEmpty() ||
                 request.getUsername().trim().isEmpty()) {
-            throw new UserException("password or username is empty");
+            throw new UserException("password or username is empty", "003");
         }
 
         if (Objects.nonNull(userLoginRepository.findUserEntityByUsername(request.getUsername()))) {
-            throw new UserException("Username already exists");
+            throw new UserException("Username already exists", "004");
         }
 
         String encodedPass = bCryptPasswordEncoder.encode(request.getPassword());
