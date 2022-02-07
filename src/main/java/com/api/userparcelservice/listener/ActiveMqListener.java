@@ -1,11 +1,14 @@
 package com.api.userparcelservice.listener;
 
+import com.api.userparcelservice.domain.LogoutRequest;
+import com.api.userparcelservice.domain.LogoutResponse;
 import com.api.userparcelservice.domain.RegisterUserRequest;
 import com.api.userparcelservice.domain.UserLoginRequest;
 import com.api.userparcelservice.dto.MqDTO;
 import com.api.userparcelservice.entity.UserEntity;
 import com.api.userparcelservice.service.AuthenticationService;
 import com.api.userparcelservice.service.UserAuthorizationService;
+import com.api.userparcelservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
@@ -20,6 +23,7 @@ public class ActiveMqListener {
     private final JmsTemplate jmsTemplate;
     private final AuthenticationService authenticationService;
     private final UserAuthorizationService userAuthorizationService;
+    private final UserService userService;
 
 
     @JmsListener(destination = "requestqueue")
@@ -39,5 +43,14 @@ public class ActiveMqListener {
 
         jmsTemplate.convertAndSend("responsequeue", registerResponse);
     }
+
+    @JmsListener(destination = "requestqueue")
+    public void logout(LogoutRequest request) {
+        log.info("message received: " + request);
+        LogoutResponse logoutResponse = userService.logout(request);
+        jmsTemplate.convertAndSend("responsequeue", logoutResponse);
+    }
+
+
 
 }

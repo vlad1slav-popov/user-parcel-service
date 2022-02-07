@@ -1,9 +1,11 @@
 package com.api.userparcelservice.controller;
 
 import com.api.userparcelservice.domain.LogoutRequest;
+import com.api.userparcelservice.domain.LogoutResponse;
 import com.api.userparcelservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,21 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-//    private final Logger logger;
-    private final UserService userService;
+    private final JmsTemplate jmsTemplate;
 
-    @Secured("ROLE_USER")
-    @GetMapping("hello")
-    public String hello() {
-//        logger.info("LOGGER WORKS!");
-        return "hello";
-    }
-
-    @Secured("ROLE_USER")
+    @Secured("ROLE_COURIER, ROLE_ADMIN")
     @PostMapping("user/logout")
-    public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
-        return userService.logout(request);
+    public ResponseEntity<LogoutResponse> logout(@RequestBody LogoutRequest logoutRequest) {
+        jmsTemplate.convertAndSend("requestqueue", logoutRequest);
+        return ResponseEntity.ok((LogoutResponse) jmsTemplate
+                .receiveAndConvert("responsequeue"));
     }
-
-
 }

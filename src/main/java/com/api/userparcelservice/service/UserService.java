@@ -2,6 +2,7 @@ package com.api.userparcelservice.service;
 
 
 import com.api.userparcelservice.domain.LogoutRequest;
+import com.api.userparcelservice.domain.LogoutResponse;
 import com.api.userparcelservice.domain.UserLoginRequest;
 import com.api.userparcelservice.dto.OnUserLogoutSuccessEvent;
 import com.api.userparcelservice.entity.UserEntity;
@@ -49,12 +50,14 @@ public class UserService {
             throw new UserNotFoundException("Wrong password");
     }
 
-    public ResponseEntity<String> logout(LogoutRequest request) {
+    public LogoutResponse logout(LogoutRequest request) {
         OnUserLogoutSuccessEvent logoutSuccessEvent = new OnUserLogoutSuccessEvent(
                 request.getUsername(), request.getToken(), request);
 //        logger.info("OnUserLogoutSuccessEvent: " + logoutSuccessEvent);
         applicationEventPublisher.publishEvent(logoutSuccessEvent);
-        return ResponseEntity.ok("User has successfully logged out from the system!");
+        return LogoutResponse.builder()
+                .message("User has successfully logged out from the system!")
+                .build();
     }
 
 
