@@ -24,10 +24,10 @@ public class AuthenticationController {
 
     @PostMapping("/user/login")
     public ResponseEntity<UserEntity> login(@RequestBody UserLoginRequest userLoginRequest) {
-        jmsTemplate.convertAndSend("requestqueue", userLoginRequest);
+        jmsTemplate.convertAndSend("user-login-req-queue", userLoginRequest);
 
         MqDTO mqDTO = (MqDTO) jmsTemplate
-                .receiveAndConvert("responsequeue");
+                .receiveAndConvert("user-login-res-queue");
 
         UserEntity userEntity = mqDTO.getUserEntity();
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -42,9 +42,9 @@ public class AuthenticationController {
 
     @PostMapping("/user/register")
     public ResponseEntity<UserEntity> register(@RequestBody RegisterUserRequest registerUserRequest) {
-        jmsTemplate.convertAndSend("requestqueue", registerUserRequest);
+        jmsTemplate.convertAndSend("user-register-req-queue", registerUserRequest);
         return ResponseEntity.ok((UserEntity) jmsTemplate
-                .receiveAndConvert("responsequeue"));
+                .receiveAndConvert("user-register-res-queue"));
     }
 
 

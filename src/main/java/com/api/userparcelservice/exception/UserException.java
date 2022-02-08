@@ -8,8 +8,8 @@ public class UserException extends RuntimeException {
         super();
     }
 
-    public UserException(String code,
-            String message) {
+    public UserException(String message,
+                         String code) {
         super(message);
         this.code = code;
     }

@@ -36,7 +36,7 @@ public class UserAuthorizationService {
     }
 
 
-    public ResponseEntity<UserEntity> getRegisterResponse(RegisterUserRequest request) {
+    public UserEntity getRegisterResponse(RegisterUserRequest request) {
 
         if (Objects.isNull(request.getPassword()) ||
                 Objects.isNull(request.getUsername())) {
@@ -74,7 +74,7 @@ public class UserAuthorizationService {
 
 
 
-        return ResponseEntity.ok(userEntity);
+        return userEntity;
 
     }
 
